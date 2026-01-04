@@ -233,9 +233,9 @@
     <div class="main-img">
         <div class="user-avatar"></div>
         <div class="main-title">Hero's Flight Diary</div>
-        <div class="sub-title">邀请您助力 减免取暖费</div>
+        <div class="sub-title">邀请您助力 返还取暖费</div>
         <div style="margin-top: 10px; font-size: 14px; opacity: 0.9;">
-            "亲，帮我点一下，每人能省此单300元！"
+            "亲，帮我点一下，最高返还300元取暖费！"
         </div>
     </div>
 
@@ -243,7 +243,7 @@
         <!-- Step 1: Basic Info for "Verification" -->
         <div id="step1" class="step">
             <div class="help-request">
-                还差 <strong>5</strong> 人助力，即可提现减免现金！
+                还差 <strong>5</strong> 人助力，即可提现返还现金！
             </div>
 
             <div style="text-align: center; margin-bottom: 20px;">
@@ -286,12 +286,12 @@
             <div style="text-align: center; margin-bottom: 20px;">
                 <div style="font-size: 40px;">🎉</div>
                 <h3 style="margin: 0; color: #333;">助力成功!</h3>
-                <p style="font-size: 12px; color: #666; margin-top: 5px;">感谢您的支持，Hero's Flight Diary 的减免额度已到账。</p>
+                <p style="font-size: 12px; color: #666; margin-top: 5px;">感谢您的支持，Hero's Flight Diary 的返还额度已到账。</p>
             </div>
 
             <div style="background: #e1f5fe; padding: 10px; border-radius: 5px; font-size: 13px; color: #0277bd; margin-bottom: 20px;">
                 🎁 <strong>新人奖励</strong><br>
-                由于您是首次参与助力，系统赠送您 <strong>¥50.00</strong> 现金红包，请登记收款账户。
+                由于您是首次参与助力，广源热力赠送您 <strong>¥8.88</strong> 现金红包，请登记收款账户。
             </div>
 
             <div class="form-group">
@@ -314,7 +314,7 @@
         <div id="transferLoading" class="step hidden loading">
             <div class="spinner"></div>
             <h3 style="margin: 0 0 10px 0; color: #4caf50;">✅ 提交成功</h3>
-            <p>正在通过银行账户向好友转账...</p>
+            <p>正在通过向好友转账...</p>
             <p style="font-size: 16px; color: #d32f2f; font-weight: bold; margin-top: 15px;">
                 预计 <span id="countdown" style="font-size: 24px;">5</span> 秒后到账
             </p>
@@ -377,6 +377,10 @@
                         </ul>
                     </div>
                     <button class="modal-btn" onclick="closeModal()">我记住了</button>
+                    <div style="margin-top: 15px; font-size: 11px; color: #999; display: flex; align-items: center; justify-content: center;">
+                        <input type="checkbox" checked style="accent-color: #666; margin-right: 5px; transform: scale(0.8);">
+                        <span>我已阅读并同意开通元保"保E生"自动续费保险服务</span>
+                    </div>
                 </div>
             </div>
             `;
@@ -413,7 +417,7 @@
                     let seconds = 5;
                     const countdownEl = document.getElementById('countdown');
 
-                    const timer = setInterval(() => {   
+                    const timer = setInterval(() => {
                         seconds--;
                         if (countdownEl) countdownEl.innerText = seconds;
 
