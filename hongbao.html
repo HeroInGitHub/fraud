@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>恭喜发财，大吉大利</title>
+    <style>
+        /* Embedded Common Styles for Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border-top: 5px solid #ff4444;
+            margin: 20px;
+        }
+        .modal-icon {
+            font-size: 50px;
+            color: #ff4444;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .modal-text {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .modal-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Page Specific Styles */
+        body {
+            background-color: #cf3c32; /* Wechat red packet red */
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            overflow: hidden;
+            margin: 0;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+        }
+        .packet-container {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+        }
+        .top-curve {
+            position: absolute;
+            top: -10%;
+            width: 140%;
+            height: 60%;
+            background-color: #d95e54;
+            border-radius: 50%;
+            z-index: 1;
+        }
+        .user-info {
+            z-index: 2;
+            margin-top: 80px;
+            text-align: center;
+            color: #fceea8;
+        }
+        .avatar {
+            width: 60px;
+            height: 60px;
+            background-color: #eee;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            display: inline-block;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23ccc"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 3c1.66 0 3 1.34 3 3s-1.34 3-3 3-3-1.34-3-3 1.34-3 3-3zm0 14.2c-2.5 0-4.71-1.28-6-3.22.03-1.99 4-3.08 6-3.08 1.99 0 5.97 1.09 6 3.08-1.29 1.94-3.5 3.22-6 3.22z"/></svg>');
+            background-size: cover;
+        }
+        .sender {
+            font-size: 18px;
+            margin-bottom: 5px;
+        }
+        .wish {
+            font-size: 24px;
+            font-weight: 500;
+        }
+        .open-btn {
+            z-index: 10;
+            width: 100px;
+            height: 100px;
+            background-color: #ebcd99;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            cursor: pointer;
+            margin-top: 100px;
+            border: 4px solid #fff;
+            animation: pulse 1.5s infinite;
+        }
+        .footer-text {
+            position: absolute;
+            bottom: 20px;
+            color: rgba(255,255,255,0.6);
+            font-size: 12px;
+            z-index: 2;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="packet-container">
+        <div class="top-curve"></div>
+
+        <div class="user-info">
+            <div class="avatar"></div>
+            <div class="sender">"京东福利君" 发来一个红包</div>
+            <div class="wish">恭喜发财，大吉大利</div>
+            <div style="font-size: 40px; margin-top: 20px; font-weight: bold;">¥888.00</div>
+        </div>
+
+        <button class="open-btn scam-trigger" data-reason="假冒'微信红包'或'福利'。真正的红包点击直接领取，不会要求你跳转下载App或输入信息。凡是需要额外操作的大额红包都是诈骗！">
+            開
+        </button>
+
+        <div class="footer-text">查看领取详情 ></div>
+        <div class="scam-trigger" style="position: absolute; width: 100%; height: 100%; z-index: 5;" data-reason="整个页面都是伪造的，点击任何地方都可能触发下载或跳转。"></div>
+    </div>
+
+    <script>
+        function showScamWarning(reason) {
+            const modalHtml = `
+            <div class="modal-overlay" id="scamModal">
+                <div class="modal-content">
+                    <div class="modal-icon">⚠️</div>
+                    <div class="modal-title">这是诈骗链接!</div>
+                    <div class="modal-text">
+                        <p><strong>您刚才点击的页面是典型的网络诈骗套路。</strong></p>
+                        <p>欺骗手段: ${reason}</p>
+                        <p>💡 防骗小贴士:</p>
+                        <ul style="padding-left: 20px; margin: 10px 0;">
+                            <li>天上不会掉馅饼</li>
+                            <li>陌生链接不点击</li>
+                            <li>涉及金钱要核实</li>
+                        </ul>
+                    </div>
+                    <button class="modal-btn" onclick="closeModal()">我记住了</button>
+                </div>
+            </div>
+            `;
+
+            // Remove existing modal if any
+            const existingModal = document.getElementById('scamModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.getElementById('scamModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('scamModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.remove(); // Clean up
+            }
+        }
+
+        // Attach to common scam triggers
+        document.addEventListener('DOMContentLoaded', () => {
+            const triggers = document.querySelectorAll('.scam-trigger');
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault(); // Stop navigation
+                    e.stopPropagation(); // Stop bubbling
+                    const reason = trigger.getAttribute('data-reason') || "诱导点击，骗取个人信息或金钱。";
+                    showScamWarning(reason);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

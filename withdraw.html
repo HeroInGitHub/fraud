@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>用户中心 - 余额提现</title>
+    <style>
+        /* Embedded Common Styles for Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border-top: 5px solid #ff4444;
+            margin: 20px;
+        }
+        .modal-icon {
+            font-size: 50px;
+            color: #ff4444;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .modal-text {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .modal-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Page Specific Styles */
+        body {
+            background-color: #f2f2f2;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            justify-content: flex-start;
+            padding: 0;
+            margin: 0;
+            color: #333;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            min-height: 100vh;
+        }
+        .header {
+            background: #108ee9;
+            color: white;
+            padding: 15px;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            box-sizing: border-box;
+        }
+        .balance-card {
+            background: white;
+            width: 90%;
+            margin: 20px auto;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .balance-label {
+            color: #888;
+            font-size: 14px;
+        }
+        .balance-amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: #333;
+            margin: 10px 0;
+        }
+        .notice {
+            background: #fffbe6;
+            border: 1px solid #ffe58f;
+            padding: 10px;
+            margin: 0 auto 20px;
+            width: 90%;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #fa8c16;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .input-group {
+            background: white;
+            width: 100%;
+            padding: 10px 20px;
+            border-top: 1px solid #eee;
+            border-bottom: 1px solid #eee;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            box-sizing: border-box;
+        }
+        .input-group label {
+            width: 80px;
+            font-weight: bold;
+        }
+        .input-group input {
+            border: none;
+            outline: none;
+            flex: 1;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .btn-withdraw {
+            background: #108ee9;
+            color: white;
+            border: none;
+            width: 90%;
+            margin: 0 auto;
+            display: block;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .timer {
+            text-align: center;
+            color: #ff4d4f;
+            margin-top: 10px;
+            font-size: 14px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">我的钱包</div>
+
+    <div class="balance-card">
+        <div class="balance-label">可提现余额 (元)</div>
+        <div class="balance-amount">52,800.00</div>
+        <div style="color: #4caf50; font-size: 12px;">✅ 系统审核已通过</div>
+    </div>
+
+    <div class="notice">
+        ⚠️ 您的账户存在风险，需在 23:59 前完成身份验证，否则将冻结资金。
+    </div>
+
+    <div class="input-group">
+        <label>真实姓名</label>
+        <input type="text" placeholder="请输入您的真实姓名">
+    </div>
+
+    <div class="input-group">
+        <label>银行卡号</label>
+        <input type="text" placeholder="请输入资金接收卡号">
+    </div>
+
+    <div class="input-group">
+        <label>支付密码</label>
+        <input type="password" placeholder="请输入6位支付密码验证身份">
+    </div>
+
+    <button class="btn-withdraw scam-trigger" data-reason="正规平台提现不会要求您再次输入支付密码来'解冻'或'验证'。这种页面通常是为了骗取您的银行卡号和密码。">立即提现</button>
+
+    <div class="timer">距离资金冻结还剩: 04:59:21</div>
+
+    <script>
+        function showScamWarning(reason) {
+            const modalHtml = `
+            <div class="modal-overlay" id="scamModal">
+                <div class="modal-content">
+                    <div class="modal-icon">⚠️</div>
+                    <div class="modal-title">这是诈骗链接!</div>
+                    <div class="modal-text">
+                        <p><strong>您刚才点击的页面是典型的网络诈骗套路。</strong></p>
+                        <p>欺骗手段: ${reason}</p>
+                        <p>💡 防骗小贴士:</p>
+                        <ul style="padding-left: 20px; margin: 10px 0;">
+                            <li>天上不会掉馅饼</li>
+                            <li>陌生链接不点击</li>
+                            <li>涉及金钱要核实</li>
+                        </ul>
+                    </div>
+                    <button class="modal-btn" onclick="closeModal()">我记住了</button>
+                </div>
+            </div>
+            `;
+
+            const existingModal = document.getElementById('scamModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.getElementById('scamModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('scamModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.remove();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const triggers = document.querySelectorAll('.scam-trigger');
+            triggers.forEach(trigger => {
+                trigger.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const reason = trigger.getAttribute('data-reason') || "诱导点击，骗取个人信息或金钱。";
+                    showScamWarning(reason);
+                });
+            });
+        });
+    </script>
+</body>
+</html>

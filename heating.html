@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>广源热力 - 暖冬助力活动</title>
+    <style>
+        /* Embedded Common Styles for Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+            border-top: 5px solid #ff4444;
+            margin: 20px;
+        }
+        .modal-icon {
+            font-size: 50px;
+            color: #ff4444;
+            margin-bottom: 20px;
+        }
+        .modal-title {
+            font-size: 24px;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+        }
+        .modal-text {
+            font-size: 16px;
+            color: #666;
+            line-height: 1.5;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+        .leaked-info {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: left;
+            margin-bottom: 15px;
+            border: 1px solid #f5c6cb;
+            max-height: 150px;
+            overflow-y: auto;
+        }
+        .modal-btn {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal-btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Page Specific Styles */
+        body {
+            background-color: #fce8e6;
+            font-family: "PingFang SC", "Microsoft YaHei", sans-serif;
+            margin: 0;
+            padding: 0;
+            color: #333;
+        }
+        .header {
+            background-color: #d32f2f;
+            color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .logo {
+            font-size: 20px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+        .main-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            background: linear-gradient(to bottom, #d32f2f, #fce8e6);
+            color: white;
+            text-align: center;
+            padding: 30px 20px 50px;
+            box-sizing: border-box;
+        }
+        .user-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 3px solid white;
+            margin: 0 auto 10px;
+            background-color: #eee;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%23999"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>');
+            background-size: cover;
+        }
+        .main-title {
+            font-size: 24px;
+            font-weight: 900;
+            margin-bottom: 5px;
+        }
+        .sub-title {
+            font-size: 14px;
+            background-color: rgba(255,255,255,0.2);
+            color: white;
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-bottom: 10px;
+        }
+        .form-container {
+            background: white;
+            width: 90%;
+            max-width: 500px;
+            margin: -40px auto 20px;
+            border-radius: 10px;
+            padding: 25px 20px;
+            box-sizing: border-box;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            position: relative;
+            min-height: 400px;
+        }
+        .help-request {
+            background: #fff3e0;
+            border: 1px solid #ffe0b2;
+            color: #e65100;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+            text-align: left;
+        }
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #555;
+        }
+        .required { color: red; margin-left: 3px; }
+        input[type="text"], input[type="tel"], input[type="date"], input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+        input:focus {
+            border-color: #d32f2f;
+            outline: none;
+        }
+        .submit-btn {
+            background: linear-gradient(to right, #ff512f, #dd2476);
+            color: white;
+            border: none;
+            width: 100%;
+            padding: 15px;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(221, 36, 118, 0.4);
+            margin-top: 10px;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.02); }
+            100% { transform: scale(1); }
+        }
+        .footer {
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+            padding: 20px;
+            line-height: 1.5;
+        }
+        .step {
+            transition: opacity 0.3s ease;
+        }
+        .hidden {
+            display: none;
+            opacity: 0;
+        }
+        .loading {
+            text-align: center;
+            padding: 40px 0;
+        }
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #d32f2f;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div style="font-size: 24px;">🔥</div>
+        <div class="logo">广源热力</div>
+    </div>
+
+    <div class="main-img">
+        <div class="user-avatar"></div>
+        <div class="main-title">Hero's Flight Diary</div>
+        <div class="sub-title">邀请您助力 减免取暖费</div>
+        <div style="margin-top: 10px; font-size: 14px; opacity: 0.9;">
+            "亲，帮我点一下，每人能省此单300元！"
+        </div>
+    </div>
+
+    <div class="form-container">
+        <!-- Step 1: Basic Info for "Verification" -->
+        <div id="step1" class="step">
+            <div class="help-request">
+                还差 <strong>1</strong> 人助力，即可提现减免现金！
+            </div>
+
+            <div style="text-align: center; margin-bottom: 20px;">
+                <h3 style="margin: 0; color: #d32f2f;">第一步: 证实亲友身份</h3>
+                <p style="font-size: 12px; color: #666; margin-top: 5px;">为防止机器刷单，请输入您的真实信息进行验证</p>
+            </div>
+
+            <div class="form-group">
+                <label>您的姓名<span class="required">*</span></label>
+                <input type="text" id="inputName" placeholder="请输入您的真实姓名" />
+            </div>
+
+            <div class="form-group">
+                <label>居住地址<span class="required">*</span></label>
+                <input type="text" id="inputAddress" placeholder="区/街道/小区/楼号/单元/门牌号" />
+            </div>
+
+            <div class="form-group">
+                <label>出生日期<span class="required">*</span></label>
+                <input type="date" id="inputDob" value="1965-01-01" />
+            </div>
+
+            <button class="submit-btn" onclick="goToStep2()">
+                为 TA 助力
+            </button>
+
+            <div style="display: flex; align-items: center; justify-content: center; margin-top: 15px; font-size: 12px; color: #666;">
+                <input type="checkbox" checked disabled style="margin-right: 5px;"> 我同意《广源热力好友助力规则》
+            </div>
+        </div>
+
+        <!-- Loading State -->
+        <div id="loading" class="step hidden loading">
+            <div class="spinner"></div>
+            <p>正在提交验证...</p>
+        </div>
+
+        <!-- Step 2: The Trap (Bank Info) -->
+        <div id="step2" class="step hidden">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <div style="font-size: 40px;">🎉</div>
+                <h3 style="margin: 0; color: #333;">助力成功!</h3>
+                <p style="font-size: 12px; color: #666; margin-top: 5px;">感谢您的支持，Hero's Flight Diary 的减免额度已到账。</p>
+            </div>
+
+            <div style="background: #e1f5fe; padding: 10px; border-radius: 5px; font-size: 13px; color: #0277bd; margin-bottom: 20px;">
+                🎁 <strong>新人奖励</strong><br>
+                由于您是首次参与助力，系统赠送您 <strong>¥50.00</strong> 现金红包，请登记收款账户。
+            </div>
+
+            <div class="form-group">
+                <label>收款银行卡号<span class="required">*</span></label>
+                <input type="number" id="inputCard" placeholder="请输入本人银行卡号接收红包" />
+                <div style="font-size: 12px; color: #e6a23c; margin-top: 5px;">仅用于红包发放，无风险</div>
+            </div>
+
+            <div class="form-group">
+                <label>预留手机号<span class="required">*</span></label>
+                <input type="tel" id="inputPhone" placeholder="请输入银行卡绑定的手机号" maxlength="11" />
+            </div>
+
+            <button class="submit-btn" id="finalSubmitBtn">
+                领取红包并完成
+            </button>
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>版权所有 © 2026 广源热力有限公司<br>官方认证 • 隐私保护 • 违规必究</p>
+    </div>
+
+    <script>
+        function goToStep2() {
+            const nameInput = document.getElementById('inputName').value;
+            if (!nameInput) {
+                alert("请先填写您的姓名");
+                return;
+            }
+
+            document.getElementById('step1').classList.add('hidden');
+            document.getElementById('loading').classList.remove('hidden');
+
+            setTimeout(() => {
+                document.getElementById('loading').classList.add('hidden');
+                document.getElementById('step2').classList.remove('hidden');
+            }, 1000);
+        }
+
+        function showScamWarning() {
+            // Collect all inputs
+            const name = document.getElementById('inputName').value || '未填';
+            const address = document.getElementById('inputAddress').value || '未填';
+            const dob = document.getElementById('inputDob').value || '未填';
+            const card = document.getElementById('inputCard').value || '未填';
+            const phone = document.getElementById('inputPhone').value || '未填';
+
+            const modalHtml = `
+            <div class="modal-overlay" id="scamModal">
+                <div class="modal-content">
+                    <div class="modal-icon">⚠️</div>
+                    <div class="modal-title">这是诈骗链接!</div>
+                    <div class="modal-text">
+                        <p><strong>您刚才点击的页面是典型的"好友助力"诈骗。</strong></p>
+                        <p>您以为只是在帮朋友，但骗子利用了您的善心，在最后一步套取了您的敏感财产信息。</p>
+
+                        <p style="margin-bottom: 5px; font-weight: bold;">😱 看看您刚才泄露了什么:</p>
+                        <div class="leaked-info">
+                            <strong>姓名:</strong> ${name}<br>
+                            <strong>地址:</strong> ${address}<br>
+                            <strong>生日:</strong> ${dob}<br style="margin-bottom: 8px; display: block;">
+                            <strong style="color: red;">银行卡号:</strong> ${card}<br>
+                            <strong style="color: red;">手机号:</strong> ${phone}
+                        </div>
+
+                        <p>💡 防骗小贴士:</p>
+                        <ul style="padding-left: 20px; margin: 5px 0;">
+                            <li>陌生链接不要点，涉及"输入信息"要警惕</li>
+                            <li>正规助力只需点击，绝不会索要银行卡</li>
+                        </ul>
+                    </div>
+                    <button class="modal-btn" onclick="closeModal()">我记住了</button>
+                </div>
+            </div>
+            `;
+
+            // Remove existing modal if any
+            const existingModal = document.getElementById('scamModal');
+            if (existingModal) {
+                existingModal.remove();
+            }
+
+            document.body.insertAdjacentHTML('beforeend', modalHtml);
+            document.getElementById('scamModal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('scamModal');
+            if (modal) {
+                modal.style.display = 'none';
+                modal.remove();
+                location.reload();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const finalBtn = document.getElementById('finalSubmitBtn');
+            if(finalBtn) {
+                finalBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showScamWarning();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
