@@ -243,7 +243,7 @@
         <!-- Step 1: Basic Info for "Verification" -->
         <div id="step1" class="step">
             <div class="help-request">
-                还差 <strong>1</strong> 人助力，即可提现减免现金！
+                还差 <strong>5</strong> 人助力，即可提现减免现金！
             </div>
 
             <div style="text-align: center; margin-bottom: 20px;">
@@ -308,6 +308,17 @@
             <button class="submit-btn" id="finalSubmitBtn">
                 领取红包并完成
             </button>
+        </div>
+
+        <!-- Step 3: Fake Transfer Loading -->
+        <div id="transferLoading" class="step hidden loading">
+            <div class="spinner"></div>
+            <h3 style="margin: 0 0 10px 0; color: #4caf50;">✅ 提交成功</h3>
+            <p>正在通过银行账户向好友转账...</p>
+            <p style="font-size: 16px; color: #d32f2f; font-weight: bold; margin-top: 15px;">
+                预计 <span id="countdown" style="font-size: 24px;">5</span> 秒后到账
+            </p>
+            <p style="font-size: 12px; color: #999; margin-top: 10px;">请勿关闭页面，以免转账失败</p>
         </div>
 
     </div>
@@ -394,7 +405,24 @@
             if(finalBtn) {
                 finalBtn.addEventListener('click', (e) => {
                     e.preventDefault();
-                    showScamWarning();
+
+                    // Switch to transfer loading state
+                    document.getElementById('step2').classList.add('hidden');
+                    document.getElementById('transferLoading').classList.remove('hidden');
+
+                    let seconds = 5;
+                    const countdownEl = document.getElementById('countdown');
+
+                    const timer = setInterval(() => {   
+                        seconds--;
+                        if (countdownEl) countdownEl.innerText = seconds;
+
+                        if (seconds <= 0) {
+                            clearInterval(timer);
+                            document.getElementById('transferLoading').classList.add('hidden');
+                            showScamWarning();
+                        }
+                    }, 1000);
                 });
             }
         });
